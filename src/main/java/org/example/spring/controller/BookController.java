@@ -18,7 +18,7 @@ public class BookController {
     private BookService bookService;
 
     //Get all the books
-    @GetMapping//(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Book>> list() {
         List<Book> list = bookService.list();
         return ResponseEntity.ok().body(list);
@@ -29,7 +29,6 @@ public class BookController {
     public ResponseEntity<?> save(@RequestBody Book book) {
         long id = bookService.save(book);
         return ResponseEntity.ok().body("Book added with id:" + id);
-
     }
 
     //Get a single record
