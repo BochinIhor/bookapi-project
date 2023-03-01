@@ -7,12 +7,12 @@ import {MatTableDataSource} from "@angular/material/table";
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
-  styleUrls: ['./book.component.css'],
+  styleUrls: ['./book.component.scss'],
 })
 export class BookComponent implements OnInit{
   displayedColumns: string[] = BookColumns.map((col) => col.key);
   columnsSchema: any = BookColumns;
-  dataSource = new MatTableDataSource<Book>();
+  myDataSource = new MatTableDataSource<Book>();
   valid: any = {};
   books: Book[];
   book = new Book();
@@ -27,25 +27,30 @@ export class BookComponent implements OnInit{
   getBooks(): void {
     this.bookService.getAllBooks()
       .subscribe(bookData => {
-        this.dataSource.data = bookData;
-        //this.dataSource.sort = this.sort;
+        this.myDataSource.data = bookData;
         this.sortBooks();
       });
   }
 
   sortBooks(): void {
-    this.dataSource.sort = this.sort;
+    this.myDataSource.sort = this.sort;
   }
 
   addBook(): void {
     const newBook: Book = {
-      id: 0,
+      id: null,
       title: '',
       author: '',
       isEdit: true,
       isSelected: false,
     }
-    this.dataSource.data = [newBook, ...this.dataSource.data];
+    this.bookService.addBook(newBook);
+    this.bookService.getRequestedBook(newBook)
+      .subscribe(response => {
+        newBook.id = response.id
+      })
+    this.myDataSource.data = [...this.myDataSource.data, newBook];
+    this.sortBooks();
   }
 
   editBook(book: Book) {
@@ -57,22 +62,15 @@ export class BookComponent implements OnInit{
     }
   }
 
-  deleteBook(Id: number): void {
-    this.bookService.deleteBook(Id)
-      .subscribe(() => {
-        this.dataSource.data = this.dataSource.data.filter(
-          (book: Book) => book.id !== Id,
-        )
-      })
+  deleteBook(row_id: number): void {
+    this.bookService.deleteBook(row_id);
+    this.myDataSource.data = this.myDataSource.data.filter((book: Book) => book.id !== row_id);
   }
 
   removeSelectedBooks() {
-    const books = this.dataSource.data.filter((b: Book) => b.isSelected)
-          this.bookService.deleteBooks(books).subscribe(() => {
-            this.dataSource.data = this.dataSource.data.filter(
-              (b: Book) => !b.isSelected,
-            )
-          })
+    const books = this.myDataSource.data.filter((b: Book) => b.isSelected);
+    this.bookService.deleteBooks(books);
+    this.myDataSource.data = this.myDataSource.data.filter((b: Book) => !b.isSelected);
   }
 
   inputHandler(e: any, id: number, key: string) {
@@ -90,15 +88,15 @@ export class BookComponent implements OnInit{
   }
 
   isAllSelected() {
-    return this.dataSource.data.every((item) => item.isSelected)
+    return this.myDataSource.data.every((item) => item.isSelected)
   }
 
   isAnySelected() {
-    return this.dataSource.data.some((item) => item.isSelected)
+    return this.myDataSource.data.some((item) => item.isSelected)
   }
 
   selectAll(event: any) {
-    this.dataSource.data = this.dataSource.data.map((item) => ({
+    this.myDataSource.data = this.myDataSource.data.map((item) => ({
       ...item,
       isSelected: event.checked,
     }))

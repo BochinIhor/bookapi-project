@@ -47,7 +47,11 @@ h2 {
 
 mat-table {
   display: table;
-  margin: 1rem auto;
-  width: 100%;
   background-color: rgb(153, 243, 247);
+  border: 1px solid;
+  margin: 1rem auto;
+}
+
+mat-table th {
+  background-color: rgb(98, 252, 140);
 }

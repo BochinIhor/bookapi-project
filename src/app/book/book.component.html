@@ -14,7 +14,7 @@
   </form>
 </article>
 
-<mat-table [dataSource]="dataSource" matSort>
+<mat-table [dataSource]="myDataSource" matSort matSortStart="asc">
   <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
     <th mat-header-cell *matHeaderCellDef [ngSwitch]="col.key" mat-sort-header>
       <span *ngSwitchCase="'isSelected'">
