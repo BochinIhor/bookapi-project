@@ -30,7 +30,6 @@ h2 {
 .button-remove-rows {
   background: red;
   color: #ffffff;
-  margin-right: 5px;
 }
 
 .button-remove {
@@ -47,11 +46,15 @@ h2 {
 
 mat-table {
   display: table;
-  background-color: rgb(153, 243, 247);
+  background-color: #ffd2b8;
   border: 1px solid;
   margin: 1rem auto;
 }
 
+tr:nth-child(odd) {
+  background-color: #f0c5ad;
+}
+
 mat-table th {
-  background-color: rgb(98, 252, 140);
+  background-color: #f0a77d;
 }
